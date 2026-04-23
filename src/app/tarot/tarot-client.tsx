@@ -5,6 +5,15 @@ import { Sparkles, Star, Moon, Sun, ChevronRight, RotateCcw, Check, Download, Sh
 import { MAJOR_ARCANA, POSITIONS, TarotCard } from '@/data/tarot'
 import Link from 'next/link'
 
+const THEMES = [
+  { id: 'feelings', icon: '💕', label: '彼の気持ち', desc: '今あの人が感じていることは？' },
+  { id: 'reunion', icon: '🌹', label: '復縁', desc: 'もう一度やり直せる？' },
+  { id: 'encounter', icon: '✨', label: '新しい出会い', desc: '素敵な縁はある？' },
+  { id: 'unrequited', icon: '💫', label: '片思い', desc: '想いは届く？' },
+  { id: 'progress', icon: '💍', label: '関係の進展', desc: '次のステップへ進める？' },
+  { id: 'general', icon: '🔮', label: '総合鑑定', desc: '今の恋愛全体を占う' },
+]
+
 interface DrawnCard extends TarotCard {
   position: string
   reversed: boolean
@@ -134,7 +143,8 @@ export default function TarotClient({
   isPaidSubscriber: boolean
   fortune: FortuneData | null
 }) {
-  const [phase, setPhase] = useState<'select' | 'reveal' | 'question' | 'loading' | 'result'>('select')
+  const [phase, setPhase] = useState<'theme' | 'select' | 'reveal' | 'question' | 'loading' | 'result'>('theme')
+  const [selectedTheme, setSelectedTheme] = useState<typeof THEMES[0] | null>(null)
   const [shuffledCards] = useState(() => [...MAJOR_ARCANA].sort(() => Math.random() - 0.5))
   const [selectedIndices, setSelectedIndices] = useState<number[]>([])
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([])
@@ -184,6 +194,7 @@ export default function TarotClient({
           cardIds: drawnCards.map(c => c.id),
           reversals: drawnCards.map(c => c.reversed),
           question: question || null,
+          theme: selectedTheme?.id ?? 'general',
           fortuneScore: fortune?.score ?? null,
           fortuneLabel: fortune?.scoreLabel ?? null,
         }),
@@ -227,6 +238,7 @@ export default function TarotClient({
     setError('')
     setImageUrl(null)
     setImageLoaded(false)
+    setSelectedTheme(null)
   }
 
   async function handleDownload() {
@@ -285,8 +297,36 @@ export default function TarotClient({
           }}>
             タロット鑑定
           </h1>
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>プレミアム鑑定プラン</p>
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+            {selectedTheme ? `${selectedTheme.icon} ${selectedTheme.label}` : 'プレミアム鑑定プラン'}
+          </p>
         </div>
+
+        {/* テーマ選択フェーズ */}
+        {phase === 'theme' && (
+          <div className="animate-fade-in-up">
+            <p className="text-center text-sm mb-5" style={{ color: 'var(--text-primary)' }}>
+              何について占いますか？
+            </p>
+            <div className="grid grid-cols-2 gap-3 mb-2">
+              {THEMES.map(theme => (
+                <button
+                  key={theme.id}
+                  onClick={() => { setSelectedTheme(theme); setPhase('select') }}
+                  className="rounded-2xl p-4 text-left transition-all duration-200 hover:scale-105"
+                  style={{
+                    background: 'rgba(26,26,78,0.8)',
+                    border: '1px solid rgba(201,168,76,0.25)',
+                  }}
+                >
+                  <div className="text-2xl mb-2">{theme.icon}</div>
+                  <p className="text-sm font-bold mb-1" style={{ color: 'var(--accent-gold)' }}>{theme.label}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>{theme.desc}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* カード選択フェーズ */}
         {phase === 'select' && (

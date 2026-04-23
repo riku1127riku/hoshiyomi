@@ -24,7 +24,17 @@ export async function POST(req: NextRequest) {
 
   if (!isActive) return NextResponse.json({ error: 'subscription_required' }, { status: 403 })
 
-  const { cardIds, reversals, question, fortuneScore, fortuneLabel } = await req.json()
+  const { cardIds, reversals, question, theme, fortuneScore, fortuneLabel } = await req.json()
+
+  const THEME_FOCUS: Record<string, string> = {
+    feelings: '相手の気持ち・感情・あなたへの想いに焦点を当てて',
+    reunion: '復縁の可能性・2人が再び結ばれるための道筋に焦点を当てて',
+    encounter: '新しい出会いのタイミング・どんな人と縁があるかに焦点を当てて',
+    unrequited: '片思いの行方・想いが届くかどうか・取るべき行動に焦点を当てて',
+    progress: '関係をステップアップさせる方法・2人の未来に焦点を当てて',
+    general: '恋愛全体の流れと今後の展開に焦点を当てて',
+  }
+  const themeFocus = THEME_FOCUS[theme] ?? THEME_FOCUS.general
 
   const cards = cardIds.map((id: number, i: number) => ({
     ...MAJOR_ARCANA.find(c => c.id === id)!,
@@ -34,12 +44,13 @@ export async function POST(req: NextRequest) {
 
   const prompt = `プロのタロット占い師として恋愛鑑定を行ってください。
 
+テーマ：${themeFocus}
 ${fortuneScore ? `今日の数秘術スコア：${fortuneScore}/10（${fortuneLabel}）\n` : ''}過去：${cards[0].name}（${cards[0].reversed ? '逆位置' : '正位置'}）
 現在：${cards[1].name}（${cards[1].reversed ? '逆位置' : '正位置'}）
 未来：${cards[2].name}（${cards[2].reversed ? '逆位置' : '正位置'}）
 ${question ? `\n質問：${question}` : ''}
 
-3枚の流れを繋げて「あなた」を主語に恋愛メッセージを250文字で。温かく具体的に。メッセージのみ返してください。`
+テーマに沿って3枚の流れを繋げ「あなた」を主語に250文字で。温かく具体的に。メッセージのみ返してください。`
 
   const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
 

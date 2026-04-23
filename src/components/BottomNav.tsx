@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Sun, Clock, Sparkles, User } from 'lucide-react'
+import { Sun, Clock, Sparkles, User, Heart } from 'lucide-react'
 
 const NAV_ITEMS = [
   { href: '/fortune', label: '今日', icon: Sun },
-  { href: '/history', label: '履歴', icon: Clock },
   { href: '/tarot', label: 'タロット', icon: Sparkles },
+  { href: '/compatibility', label: '相性', icon: Heart },
+  { href: '/history', label: '履歴', icon: Clock },
   { href: '/mypage', label: 'マイページ', icon: User },
 ]
 
