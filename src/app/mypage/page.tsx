@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import CancelButton from './cancel-button'
+import AstrologyProfile from '@/components/AstrologyProfile'
 
 export default async function MyPage() {
   const supabase = await createClient()
@@ -48,6 +49,10 @@ export default async function MyPage() {
             <p className="text-sm" style={{ color: 'var(--text-primary)' }}>イニシャル：{profile.initials}</p>
             <p className="text-sm" style={{ color: 'var(--text-primary)' }}>生年月日：{profile.birth_date}</p>
           </div>
+        )}
+
+        {profile?.birth_date && (
+          <AstrologyProfile birthDate={profile.birth_date} />
         )}
 
         <div className="card p-5">
