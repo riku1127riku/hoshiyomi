@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
 import StarryBackground from '@/components/StarryBackground'
@@ -7,6 +7,19 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: '星詠み | 毎朝あなただけの今日の恋愛運',
   description: 'イニシャルと生年月日だけで、AIが毎日あなただけの今日の運勢を読み解きます。',
+  appleWebApp: {
+    capable: true,
+    title: '星詠み',
+    statusBarStyle: 'black-translucent',
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#0a0a1a',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
