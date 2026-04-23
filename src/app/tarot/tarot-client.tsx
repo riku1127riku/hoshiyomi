@@ -26,13 +26,6 @@ interface ReadingResult {
   cardReadings?: string[]
 }
 
-interface FortuneData {
-  score: number
-  scoreLabel: string
-  loveMessage: string
-  todaysWord: string
-  luckyAction: string
-}
 
 function SelectCard({
   selected, disabled, onClick,
@@ -137,11 +130,9 @@ function CardFront({ card, size = 'large' }: { card: DrawnCard; size?: 'large' |
 export default function TarotClient({
   isSubscribed,
   isPaidSubscriber,
-  fortune,
 }: {
   isSubscribed: boolean
   isPaidSubscriber: boolean
-  fortune: FortuneData | null
 }) {
   const [phase, setPhase] = useState<'theme' | 'select' | 'reveal' | 'question' | 'loading' | 'result'>('theme')
   const [selectedTheme, setSelectedTheme] = useState<typeof THEMES[0] | null>(null)
@@ -195,8 +186,8 @@ export default function TarotClient({
           reversals: drawnCards.map(c => c.reversed),
           question: question || null,
           theme: selectedTheme?.id ?? 'general',
-          fortuneScore: fortune?.score ?? null,
-          fortuneLabel: fortune?.scoreLabel ?? null,
+          fortuneScore: null,
+          fortuneLabel: null,
         }),
       })
       if (!res.ok) throw new Error()
@@ -254,8 +245,7 @@ export default function TarotClient({
 
   function handleShare() {
     const cardText = drawnCards.map(c => `${c.position}：${c.name}${c.reversed ? '（逆）' : ''}`).join('\n')
-    const scoreText = fortune ? `\n⭐ 今日の恋愛運：${fortune.score}/10` : ''
-    const text = encodeURIComponent(`✨ タロット鑑定結果 ✨\n${cardText}${scoreText}\n\n#星詠み #タロット占い #恋愛運`)
+    const text = encodeURIComponent(`✨ タロット鑑定結果 ✨\n${cardText}\n\n#星詠み #タロット占い #恋愛運`)
     window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank')
   }
 
@@ -489,53 +479,6 @@ export default function TarotClient({
         {/* 結果フェーズ */}
         {phase === 'result' && result && (
           <div className="space-y-4 animate-fade-in-up">
-
-            {/* 今日の星詠み */}
-            {fortune && (
-              <div className="card-glitter p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg">🔯</span>
-                  <span className="text-sm font-bold" style={{ color: 'var(--accent-gold)' }}>
-                    今日の星詠み
-                  </span>
-                </div>
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="text-4xl font-bold" style={{
-                    background: 'linear-gradient(135deg, #ef4444, #f59e0b)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }}>
-                    {fortune.score}
-                    <span className="text-base" style={{ color: 'rgba(255,255,255,0.3)', WebkitTextFillColor: 'rgba(255,255,255,0.3)' }}>
-                      /10
-                    </span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-bold mb-1" style={{ color: 'var(--accent-gold)' }}>
-                      {fortune.scoreLabel}
-                    </p>
-                    <div className="flex gap-1">
-                      {Array.from({ length: 10 }, (_, i) => (
-                        <div key={i} className="h-1.5 flex-1 rounded-full"
-                          style={{ background: i < fortune.score ? '#c9a84c' : 'rgba(255,255,255,0.1)' }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--text-primary)' }}>
-                  💕 {fortune.loveMessage}
-                </p>
-                <div className="space-y-1 pt-2" style={{ borderTop: '1px solid rgba(201,168,76,0.1)' }}>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    ✨ 今日のひとこと：<span style={{ color: 'var(--text-primary)' }}>{fortune.todaysWord}</span>
-                  </p>
-                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                    🌟 引き寄せ行動：<span style={{ color: 'var(--text-primary)' }}>{fortune.luckyAction}</span>
-                  </p>
-                </div>
-              </div>
-            )}
 
             {/* 引いたカード */}
             <div className="flex justify-center gap-3">
