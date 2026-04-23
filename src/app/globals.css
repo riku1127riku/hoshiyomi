@@ -86,10 +86,10 @@ body {
 }
 
 @keyframes shooting {
-  0%   { transform: rotate(-45deg) translateX(-20px); opacity: 0; }
+  0%   { transform: translateY(-20px); opacity: 0; }
   10%  { opacity: 1; }
   85%  { opacity: 0.5; }
-  100% { transform: rotate(-45deg) translateX(320px); opacity: 0; }
+  100% { transform: translateY(340px); opacity: 0; }
 }
 
 @keyframes float {
@@ -184,10 +184,10 @@ body {
 
 .shooting-star {
   position: absolute;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.15));
+  width: 1.5px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.9) 30%, rgba(255,255,255,0.15));
   border-radius: 0;
-  transform-origin: left center;
+  transform-origin: top center;
   animation: shooting ease-out infinite;
 }
 
