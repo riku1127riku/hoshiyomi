@@ -30,5 +30,7 @@ export default async function TarotPage() {
     } catch {}
   }
 
-  return <TarotClient isSubscribed={!!isSubscribed} fortune={fortune} />
+  const isPaidSubscriber = subscription?.status === 'active'
+
+  return <TarotClient isSubscribed={!!isSubscribed} isPaidSubscriber={isPaidSubscriber} fortune={fortune} />
 }

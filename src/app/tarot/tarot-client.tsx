@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles, Star, Moon, Sun, ChevronRight, RotateCcw, Check } from 'lucide-react'
+import { Sparkles, Star, Moon, Sun, ChevronRight, RotateCcw, Check, Download, Share2 } from 'lucide-react'
 import { MAJOR_ARCANA, POSITIONS, TarotCard } from '@/data/tarot'
 import Link from 'next/link'
 
@@ -127,9 +127,11 @@ function CardFront({ card, size = 'large' }: { card: DrawnCard; size?: 'large' |
 
 export default function TarotClient({
   isSubscribed,
+  isPaidSubscriber,
   fortune,
 }: {
   isSubscribed: boolean
+  isPaidSubscriber: boolean
   fortune: FortuneData | null
 }) {
   const [phase, setPhase] = useState<'select' | 'reveal' | 'question' | 'loading' | 'result'>('select')
@@ -139,6 +141,8 @@ export default function TarotClient({
   const [question, setQuestion] = useState('')
   const [result, setResult] = useState<ReadingResult | null>(null)
   const [error, setError] = useState('')
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   const toggleSelect = (index: number) => {
     setSelectedIndices(prev => {
@@ -188,6 +192,11 @@ export default function TarotClient({
       if (!res.ok) throw new Error(data.error)
       setResult(data)
       setPhase('result')
+      // 幻想的な鑑定画像を生成（Pollinations.ai）
+      const prompt = encodeURIComponent(
+        `mystical fantasy tarot reading art, ${drawnCards.map(c => c.nameEn).join(' and ')} tarot cards, starry cosmic sky, golden magical light, crescent moon, ethereal sparkles, purple and gold color palette, cinematic fantasy illustration, beautiful, no text, no letters`
+      )
+      setImageUrl(`https://image.pollinations.ai/prompt/${prompt}?width=512&height=512&nologo=true&seed=${Date.now()}`)
     } catch {
       setError('鑑定に失敗しました。もう一度お試しください。')
       setPhase('question')
@@ -201,6 +210,31 @@ export default function TarotClient({
     setQuestion('')
     setResult(null)
     setError('')
+    setImageUrl(null)
+    setImageLoaded(false)
+  }
+
+  async function handleDownload() {
+    if (!imageUrl) return
+    try {
+      const res = await fetch(imageUrl)
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'hoshiyomi-tarot.jpg'
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      window.open(imageUrl, '_blank')
+    }
+  }
+
+  function handleShare() {
+    const cardText = drawnCards.map(c => `${c.position}：${c.name}${c.reversed ? '（逆）' : ''}`).join('\n')
+    const scoreText = fortune ? `\n⭐ 今日の恋愛運：${fortune.score}/10` : ''
+    const text = encodeURIComponent(`✨ タロット鑑定結果 ✨\n${cardText}${scoreText}\n\n#星詠み #タロット占い #恋愛運`)
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank')
   }
 
   if (!isSubscribed) {
@@ -464,6 +498,69 @@ export default function TarotClient({
                 </div>
               ))}
             </div>
+
+            {/* 幻想的な鑑定画像 */}
+            {imageUrl && (
+              <div className="card overflow-hidden">
+                <div className="relative">
+                  {!imageLoaded && (
+                    <div className="w-full h-56 flex items-center justify-center"
+                      style={{ background: 'rgba(26,26,78,0.8)' }}>
+                      <div className="text-center">
+                        <span className="sparkle-icon text-3xl block mb-2">🔮</span>
+                        <p className="text-xs animate-pulse" style={{ color: 'var(--accent-gold)' }}>
+                          鑑定画像を生成中...
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  <img
+                    src={imageUrl}
+                    alt="タロット鑑定画像"
+                    className="w-full object-cover"
+                    style={{
+                      display: imageLoaded ? 'block' : 'none',
+                      maxHeight: '280px',
+                      filter: isPaidSubscriber ? 'none' : 'blur(14px)',
+                      transform: isPaidSubscriber ? 'none' : 'scale(1.08)',
+                    }}
+                    onLoad={() => setImageLoaded(true)}
+                    onError={() => setImageLoaded(true)}
+                  />
+                  {imageLoaded && !isPaidSubscriber && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+                      style={{ background: 'rgba(10,10,26,0.45)' }}>
+                      <p className="text-sm font-bold text-center px-4" style={{ color: 'var(--accent-gold)' }}>
+                        ✨ サンプル表示
+                      </p>
+                      <p className="text-xs text-center px-6" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                        月額プランで高画質表示・保存・シェアが解放されます
+                      </p>
+                      <Link href="/api/stripe/checkout"
+                        className="btn-primary text-xs px-4 py-2">
+                        月額500円で解放する
+                      </Link>
+                    </div>
+                  )}
+                </div>
+                {imageLoaded && isPaidSubscriber && (
+                  <div className="p-3 flex gap-2">
+                    <button onClick={handleDownload}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-80"
+                      style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--accent-gold)', border: '1px solid rgba(201,168,76,0.3)' }}>
+                      <Download size={13} />
+                      画像を保存
+                    </button>
+                    <button onClick={handleShare}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-80"
+                      style={{ background: 'rgba(29,161,242,0.15)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)' }}>
+                      <Share2 size={13} />
+                      Xでシェア
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* タロット総合鑑定 */}
             <div className="card-glitter p-5">
