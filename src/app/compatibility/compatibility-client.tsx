@@ -66,29 +66,10 @@ export default function CompatibilityClient({ isSubscribed }: { isSubscribed: bo
       })
       if (!res.ok) throw new Error()
 
-      const reader = res.body!.getReader()
-      const decoder = new TextDecoder()
-      let buffer = ''
-      let metaParsed = false
-
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        buffer += decoder.decode(value, { stream: true })
-
-        if (!metaParsed) {
-          const idx = buffer.indexOf('\n')
-          if (idx !== -1) {
-            setCompatData(JSON.parse(buffer.slice(0, idx)))
-            setPhase('result')
-            buffer = buffer.slice(idx + 1)
-            metaParsed = true
-          }
-        } else {
-          setReading(prev => prev + buffer)
-          buffer = ''
-        }
-      }
+      const data = await res.json()
+      setCompatData(data)
+      setReading(data.reading)
+      setPhase('result')
     } catch {
       setError('鑑定に失敗しました。もう一度お試しください。')
       setPhase('input')
