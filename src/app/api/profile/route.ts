@@ -33,5 +33,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  // 初回登録時のみ7日間トライアルを作成
+  const { data: existing } = await adminSupabase
+    .from('subscriptions')
+    .select('id')
+    .eq('user_id', user.id)
+    .single()
+
+  if (!existing) {
+    const trialEnd = new Date()
+    trialEnd.setDate(trialEnd.getDate() + 7)
+    await adminSupabase.from('subscriptions').insert({
+      user_id: user.id,
+      status: 'trialing',
+      trial_end: trialEnd.toISOString(),
+    })
+  }
+
   return NextResponse.json({ success: true })
 }
