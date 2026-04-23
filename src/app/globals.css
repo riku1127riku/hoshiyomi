@@ -14,9 +14,7 @@
   --color-foreground: var(--text-primary);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   background: var(--bg-primary);
@@ -25,6 +23,7 @@ body {
   min-height: 100vh;
 }
 
+/* ===== カード・ボタン ===== */
 .card {
   background: rgba(26, 26, 78, 0.6);
   backdrop-filter: blur(12px);
@@ -33,18 +32,20 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-gold), #a07830);
+  background: linear-gradient(135deg, #e8c56a, #c9a84c, #a07830);
   color: #0a0a1a;
   font-weight: 700;
   padding: 0.75rem 2rem;
   border-radius: 9999px;
   border: none;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(201,168,76,0.4);
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(201,168,76,0.6);
 }
 
 .btn-ghost {
@@ -78,37 +79,143 @@ body {
   border-color: var(--accent-gold);
 }
 
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1); }
+/* ===== アニメーション ===== */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes shooting {
+  0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
+  100% { transform: translateX(300px) translateY(300px) rotate(-45deg); opacity: 0; }
 }
 
 @keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(3deg); }
+  66% { transform: translateY(-6px) rotate(-3deg); }
+}
+
+@keyframes floatSlow {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-8px); }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
-
-.sparkle {
-  display: inline-block;
-  animation: sparkle 1.5s ease-in-out infinite;
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
-.sparkle:nth-child(2) { animation-delay: 0.5s; }
-.sparkle:nth-child(3) { animation-delay: 1s; }
 
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes glitter {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(201,168,76,0.3); }
+  50% { box-shadow: 0 0 30px rgba(201,168,76,0.7), 0 0 60px rgba(201,168,76,0.3); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rainbowGold {
+  0% { color: #c9a84c; }
+  25% { color: #f0d080; }
+  50% { color: #e8c56a; }
+  75% { color: #a07830; }
+  100% { color: #c9a84c; }
+}
+
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
+.animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+.animate-fade-in-scale { animation: fadeInScale 0.5s ease-out forwards; }
+.animate-pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+.animate-rainbow-gold { animation: rainbowGold 3s ease-in-out infinite; }
+
+.sparkle-icon {
+  display: inline-block;
+  animation: sparkle 2s ease-in-out infinite;
+}
+.sparkle-icon:nth-child(2) { animation-delay: 0.6s; }
+.sparkle-icon:nth-child(3) { animation-delay: 1.2s; }
+.sparkle-icon:nth-child(4) { animation-delay: 1.8s; }
+
+/* ===== 星空背景 ===== */
 .stars-bg {
   position: fixed;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(155, 127, 205, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(201, 168, 76, 0.06) 0%, transparent 50%),
-    #0a0a1a;
   z-index: -1;
+  background: #0a0a1a;
+  overflow: hidden;
+}
+
+.stars-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(155, 127, 205, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(201, 168, 76, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(100, 80, 180, 0.08) 0%, transparent 70%);
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle ease-in-out infinite;
+}
+
+.shooting-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: linear-gradient(45deg, white, transparent);
+  border-radius: 50%;
+  animation: shooting 3s ease-out infinite;
+}
+
+/* ===== グリッターカード ===== */
+.card-glitter {
+  background: rgba(26, 26, 78, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-glitter::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(201,168,76,0.03) 50%,
+    transparent 70%
+  );
+  animation: glitter 4s linear infinite;
+}
+
+/* ===== スコア表示 ===== */
+.score-display {
+  animation: countUp 0.8s ease-out forwards, pulseGlow 2s ease-in-out infinite 0.8s;
 }

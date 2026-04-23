@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
+import StarryBackground from '@/components/StarryBackground'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja" className="h-full">
       <body className="min-h-full flex flex-col">
-        <div className="stars-bg" />
+        <StarryBackground />
         <Header />
         <div className="flex-1">
           {children}
