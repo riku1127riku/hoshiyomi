@@ -20,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="text-center py-4 text-xs space-x-4" style={{ color: 'var(--text-muted)' }}>
           <Link href="/terms" className="hover:opacity-70">利用規約</Link>
           <Link href="/privacy" className="hover:opacity-70">プライバシーポリシー</Link>
+          <Link href="/contact" className="hover:opacity-70">お問い合わせ</Link>
         </footer>
       </body>
     </html>
