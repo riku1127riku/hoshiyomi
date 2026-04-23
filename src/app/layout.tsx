@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: '星詠み | 毎朝あなただけの今日の恋愛運',
@@ -13,7 +14,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col">
         <div className="stars-bg" />
         <Header />
-        {children}
+        <div className="flex-1">
+          {children}
+        </div>
+        <footer className="text-center py-4 text-xs space-x-4" style={{ color: 'var(--text-muted)' }}>
+          <Link href="/terms" className="hover:opacity-70">利用規約</Link>
+          <Link href="/privacy" className="hover:opacity-70">プライバシーポリシー</Link>
+        </footer>
       </body>
     </html>
   )
