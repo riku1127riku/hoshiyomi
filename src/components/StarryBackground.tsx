@@ -34,9 +34,9 @@ export default function StarryBackground() {
       const s = document.createElement('div')
       s.className = 'shooting-star'
       s.style.cssText = `
-        left: ${Math.random() * 90}%;
-        top: ${Math.random() * 30}%;
-        height: ${Math.random() * 60 + 50}px;
+        left: ${Math.random() * 60}%;
+        top: ${Math.random() * 45}%;
+        width: ${Math.random() * 60 + 50}px;
         animation-duration: ${Math.random() * 1.5 + 1.5}s;
         animation-delay: ${Math.random() * 10 + i * 5}s;
       `
