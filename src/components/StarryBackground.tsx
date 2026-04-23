@@ -34,15 +34,11 @@ export default function StarryBackground() {
       const s = document.createElement('div')
       s.className = 'shooting-star'
       s.style.cssText = `
-        left: ${Math.random() * 60}%;
-        top: ${Math.random() * 40}%;
-        width: ${Math.random() * 80 + 40}px;
-        height: 1px;
-        background: linear-gradient(90deg, white, transparent);
-        border-radius: 0;
-        animation-duration: ${Math.random() * 2 + 2}s;
-        animation-delay: ${Math.random() * 6 + i * 3}s;
-        animation-iteration-count: infinite;
+        left: ${Math.random() * 65}%;
+        top: ${Math.random() * 50}%;
+        width: ${Math.random() * 60 + 50}px;
+        animation-duration: ${Math.random() * 1.5 + 1.5}s;
+        animation-delay: ${Math.random() * 10 + i * 5}s;
       `
       container.appendChild(s)
       shootingStars.push(s)
