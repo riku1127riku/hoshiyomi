@@ -213,6 +213,7 @@ body {
     transparent 70%
   );
   animation: glitter 4s linear infinite;
+  pointer-events: none;
 }
 
 /* ===== スコア表示 ===== */
