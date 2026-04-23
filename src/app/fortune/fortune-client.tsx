@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Fortune, Profile } from '@/types'
 import Link from 'next/link'
+import AstrologyProfile from '@/components/AstrologyProfile'
 
 const SCORE_COLORS: Record<number, string> = {
   1: '#6b7280', 2: '#6b7280', 3: '#9b7fcd',
@@ -173,6 +174,19 @@ export default function FortuneClient({ profile, initialFortune, isSubscribed }:
             <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
               明日また新しい運勢が届きます ✨
             </p>
+
+            {/* 星の設計図 */}
+            {profile.birth_date && (
+              <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+                <div className="flex items-center gap-2 mb-3 mt-2">
+                  <span>🌟</span>
+                  <span className="text-sm font-bold" style={{ color: 'var(--accent-gold)' }}>
+                    あなたの星の設計図
+                  </span>
+                </div>
+                <AstrologyProfile birthDate={profile.birth_date} />
+              </div>
+            )}
           </div>
         ) : (
           <div className="card p-8 text-center">
