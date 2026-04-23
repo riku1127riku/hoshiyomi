@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { LogOut } from 'lucide-react'
 
 export default function Header() {
   const pathname = usePathname()
@@ -15,45 +16,31 @@ export default function Header() {
     router.refresh()
   }
 
-  const isAuthPage = ['/', '/login', '/register'].includes(pathname)
+  const isAuthPage = ['/', '/login', '/register', '/demo'].includes(pathname)
   if (isAuthPage) return null
 
   return (
     <header className="sticky top-0 z-10 border-b" style={{
       background: 'rgba(10,10,26,0.9)',
       backdropFilter: 'blur(12px)',
-      borderColor: 'rgba(201,168,76,0.15)'
+      borderColor: 'rgba(201,168,76,0.15)',
     }}>
-      <div className="max-w-sm mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/fortune" className="text-lg font-bold" style={{ color: 'var(--accent-gold)' }}>
+      <div className="max-w-sm mx-auto px-4 h-12 flex items-center justify-between">
+        <Link href="/fortune" className="text-lg font-bold whitespace-nowrap" style={{
+          background: 'linear-gradient(135deg, #f0d080, #c9a84c)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>
           ✨ 星詠み
         </Link>
-
-        <nav className="flex items-center gap-4">
-          <Link href="/fortune"
-            className="text-sm"
-            style={{ color: pathname === '/fortune' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
-            今日
-          </Link>
-          <Link href="/history"
-            className="text-sm"
-            style={{ color: pathname === '/history' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
-            履歴
-          </Link>
-          <Link href="/tarot"
-            className="text-sm"
-            style={{ color: pathname === '/tarot' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
-            🔮
-          </Link>
-          <Link href="/mypage"
-            className="text-sm"
-            style={{ color: pathname === '/mypage' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
-            マイページ
-          </Link>
-          <button onClick={handleLogout} className="text-sm" style={{ color: 'var(--text-muted)' }}>
-            ログアウト
-          </button>
-        </nav>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full transition-opacity hover:opacity-70"
+          style={{ color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.1)' }}
+        >
+          <LogOut size={12} />
+          ログアウト
+        </button>
       </div>
     </header>
   )

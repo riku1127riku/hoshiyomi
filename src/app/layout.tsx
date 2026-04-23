@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
+import BottomNav from '@/components/BottomNav'
 import StarryBackground from '@/components/StarryBackground'
 import Link from 'next/link'
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="flex-1">
           {children}
         </div>
+        <BottomNav />
         <footer className="text-center py-4 text-xs space-x-4" style={{ color: 'var(--text-muted)' }}>
           <Link href="/terms" className="hover:opacity-70">利用規約</Link>
           <Link href="/privacy" className="hover:opacity-70">プライバシーポリシー</Link>
