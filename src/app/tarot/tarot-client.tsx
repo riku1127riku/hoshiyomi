@@ -188,15 +188,30 @@ export default function TarotClient({
           fortuneLabel: fortune?.scoreLabel ?? null,
         }),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
-      setResult(data)
+      if (!res.ok) throw new Error()
+
+      // カード個別解説はローカルデータから即時生成
+      const cardReadings = drawnCards.map(c => c.reversed ? c.reversedMessage : c.loveMessage)
+      const advice = drawnCards[2].reversed ? drawnCards[2].reversedMessage : drawnCards[2].loveMessage
+
+      setResult({ overall: '', advice, cardReadings })
       setPhase('result')
-      // 幻想的な鑑定画像を生成（Pollinations.ai）
-      const prompt = encodeURIComponent(
+
+      // 画像生成（並行して開始）
+      const imgPrompt = encodeURIComponent(
         `mystical fantasy tarot reading art, ${drawnCards.map(c => c.nameEn).join(' and ')} tarot cards, starry cosmic sky, golden magical light, crescent moon, ethereal sparkles, purple and gold color palette, cinematic fantasy illustration, beautiful, no text, no letters`
       )
-      setImageUrl(`https://image.pollinations.ai/prompt/${prompt}?width=512&height=512&nologo=true&seed=${Date.now()}`)
+      setImageUrl(`https://image.pollinations.ai/prompt/${imgPrompt}?width=512&height=512&nologo=true&seed=${Date.now()}`)
+
+      // ストリーミングでoverallを流し込む
+      const reader = res.body!.getReader()
+      const decoder = new TextDecoder()
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        const chunk = decoder.decode(value, { stream: true })
+        setResult(prev => prev ? { ...prev, overall: prev.overall + chunk } : prev)
+      }
     } catch {
       setError('鑑定に失敗しました。もう一度お試しください。')
       setPhase('question')
