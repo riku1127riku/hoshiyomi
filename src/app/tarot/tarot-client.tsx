@@ -231,18 +231,13 @@ export default function TarotClient({
 
   async function handleDownload() {
     if (!imageUrl) return
-    try {
-      const res = await fetch(imageUrl)
-      const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'hoshiyomi-tarot.jpg'
-      a.click()
-      URL.revokeObjectURL(url)
-    } catch {
-      window.open(imageUrl, '_blank')
-    }
+    const proxyUrl = `/api/tarot/download?url=${encodeURIComponent(imageUrl)}`
+    const a = document.createElement('a')
+    a.href = proxyUrl
+    a.download = 'hoshiyomi-tarot.jpg'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   }
 
   function handleShare() {
@@ -536,42 +531,35 @@ export default function TarotClient({
                     style={{
                       display: imageLoaded ? 'block' : 'none',
                       maxHeight: '280px',
-                      filter: isPaidSubscriber ? 'none' : 'blur(14px)',
-                      transform: isPaidSubscriber ? 'none' : 'scale(1.08)',
                     }}
                     onLoad={() => setImageLoaded(true)}
                     onError={() => setImageLoaded(true)}
                   />
-                  {imageLoaded && !isPaidSubscriber && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10"
-                      style={{ background: 'rgba(10,10,26,0.6)' }}>
-                      <p className="text-sm font-bold text-center px-4" style={{ color: 'var(--accent-gold)' }}>
-                        ✨ サンプル表示
-                      </p>
-                      <p className="text-xs text-center px-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                        月額プランで高画質表示・<br />保存・シェアが解放されます
-                      </p>
-                      <Link href="/api/stripe/checkout"
-                        className="btn-primary text-xs px-4 py-2">
-                        月額500円で解放する
-                      </Link>
-                    </div>
-                  )}
                 </div>
-                {imageLoaded && isPaidSubscriber && (
+                {imageLoaded && (
                   <div className="p-3 flex gap-2">
-                    <button onClick={handleDownload}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-80"
-                      style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--accent-gold)', border: '1px solid rgba(201,168,76,0.3)' }}>
-                      <Download size={13} />
-                      画像を保存
-                    </button>
-                    <button onClick={handleShare}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-80"
-                      style={{ background: 'rgba(29,161,242,0.15)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)' }}>
-                      <Share2 size={13} />
-                      Xでシェア
-                    </button>
+                    {isPaidSubscriber ? (
+                      <>
+                        <button onClick={handleDownload}
+                          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-80"
+                          style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--accent-gold)', border: '1px solid rgba(201,168,76,0.3)' }}>
+                          <Download size={13} />
+                          画像を保存
+                        </button>
+                        <button onClick={handleShare}
+                          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-80"
+                          style={{ background: 'rgba(29,161,242,0.15)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.3)' }}>
+                          <Share2 size={13} />
+                          Xでシェア
+                        </button>
+                      </>
+                    ) : (
+                      <Link href="/api/stripe/checkout"
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold"
+                        style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--accent-gold)', border: '1px solid rgba(201,168,76,0.3)' }}>
+                        ✨ 月額プランで保存・シェア解放
+                      </Link>
+                    )}
                   </div>
                 )}
               </div>
