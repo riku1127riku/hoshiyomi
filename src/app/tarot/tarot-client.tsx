@@ -543,13 +543,13 @@ export default function TarotClient({
                     onError={() => setImageLoaded(true)}
                   />
                   {imageLoaded && !isPaidSubscriber && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3"
-                      style={{ background: 'rgba(10,10,26,0.45)' }}>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10"
+                      style={{ background: 'rgba(10,10,26,0.6)' }}>
                       <p className="text-sm font-bold text-center px-4" style={{ color: 'var(--accent-gold)' }}>
                         ✨ サンプル表示
                       </p>
-                      <p className="text-xs text-center px-6" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                        月額プランで高画質表示・保存・シェアが解放されます
+                      <p className="text-xs text-center px-6 leading-relaxed" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                        月額プランで高画質表示・<br />保存・シェアが解放されます
                       </p>
                       <Link href="/api/stripe/checkout"
                         className="btn-primary text-xs px-4 py-2">
