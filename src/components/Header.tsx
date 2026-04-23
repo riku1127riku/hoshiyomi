@@ -40,6 +40,11 @@ export default function Header() {
             style={{ color: pathname === '/history' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
             履歴
           </Link>
+          <Link href="/tarot"
+            className="text-sm"
+            style={{ color: pathname === '/tarot' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
+            🔮
+          </Link>
           <Link href="/mypage"
             className="text-sm"
             style={{ color: pathname === '/mypage' ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
