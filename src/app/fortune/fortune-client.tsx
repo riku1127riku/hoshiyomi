@@ -15,6 +15,27 @@ function formatDate(date: Date) {
   return `${date.getMonth() + 1}月${date.getDate()}日（${days[date.getDay()]}）`
 }
 
+function ShareButton({ fortune }: { fortune: Fortune }) {
+  const text = `今日の恋愛運は ${fortune.score}/10「${fortune.score_label}」\n\n🌙「${fortune.todays_word}」\n\n#星詠み #恋愛運`
+  const url = 'https://hoshiyomi-tau.vercel.app'
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`
+
+  return (
+    <a
+      href={twitterUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-center gap-2 w-full py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-80"
+      style={{ background: 'rgba(255,255,255,0.1)', color: 'var(--text-primary)', border: '1px solid rgba(255,255,255,0.15)' }}
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+      今日の運勢をシェア
+    </a>
+  )
+}
+
 interface Props {
   profile: Profile
   initialFortune: Fortune | null
@@ -54,7 +75,7 @@ export default function FortuneClient({ profile, initialFortune, isSubscribed }:
     return (
       <main className="flex min-h-screen items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
-          <div className="text-5xl mb-4">🔯</div>
+          <div className="text-5xl mb-4 animate-float">🔯</div>
           <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--accent-gold)' }}>
             無料トライアル期間が終了しました
           </h2>
@@ -85,7 +106,7 @@ export default function FortuneClient({ profile, initialFortune, isSubscribed }:
         {fortune ? (
           <div className="space-y-4">
             {/* スコアカード */}
-            <div className="card p-5 text-center">
+            <div className="card p-5 text-center animate-fade-in-up">
               <div className="flex items-center justify-center gap-3 mb-1">
                 <span className="text-xl">🔯</span>
                 <span className="text-sm" style={{ color: 'var(--text-muted)' }}>今日の運勢</span>
@@ -103,7 +124,7 @@ export default function FortuneClient({ profile, initialFortune, isSubscribed }:
             </div>
 
             {/* 恋愛メッセージ */}
-            <div className="card p-5">
+            <div className="card p-5 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
               <div className="flex items-center gap-2 mb-3">
                 <span>💕</span>
                 <span className="text-sm font-medium" style={{ color: 'var(--accent-gold)' }}>
@@ -116,7 +137,7 @@ export default function FortuneClient({ profile, initialFortune, isSubscribed }:
             </div>
 
             {/* 今日のひとこと */}
-            <div className="card p-5">
+            <div className="card p-5 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="flex items-center gap-2 mb-3">
                 <span>🌙</span>
                 <span className="text-sm font-medium" style={{ color: 'var(--accent-gold)' }}>
@@ -132,7 +153,7 @@ export default function FortuneClient({ profile, initialFortune, isSubscribed }:
             </div>
 
             {/* 引き寄せ行動 */}
-            <div className="card p-5">
+            <div className="card p-5 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <div className="flex items-center gap-2 mb-3">
                 <span>🪄</span>
                 <span className="text-sm font-medium" style={{ color: 'var(--accent-gold)' }}>
@@ -144,26 +165,46 @@ export default function FortuneClient({ profile, initialFortune, isSubscribed }:
               </p>
             </div>
 
+            {/* シェアボタン */}
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <ShareButton fortune={fortune} />
+            </div>
+
             <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
               明日また新しい運勢が届きます ✨
             </p>
           </div>
         ) : (
           <div className="card p-8 text-center">
-            <div className="text-5xl mb-4">🔯</div>
-            <p className="mb-6" style={{ color: 'var(--text-muted)' }}>
-              今日の天命を読み解きます
-            </p>
-            {error && (
-              <p className="text-sm text-red-400 mb-4">{error}</p>
+            {loading ? (
+              <div>
+                <div className="flex justify-center gap-3 mb-6">
+                  <span className="sparkle text-3xl">✨</span>
+                  <span className="sparkle text-3xl">🔯</span>
+                  <span className="sparkle text-3xl">✨</span>
+                </div>
+                <p className="text-sm animate-pulse" style={{ color: 'var(--accent-gold)' }}>
+                  天命を読み解いています...
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="text-5xl mb-4 animate-float">🔯</div>
+                <p className="mb-6" style={{ color: 'var(--text-muted)' }}>
+                  今日の天命を読み解きます
+                </p>
+                {error && (
+                  <p className="text-sm text-red-400 mb-4">{error}</p>
+                )}
+                <button
+                  onClick={handleGenerate}
+                  className="btn-primary"
+                  disabled={loading}
+                >
+                  今日の運勢を見る
+                </button>
+              </>
             )}
-            <button
-              onClick={handleGenerate}
-              className="btn-primary"
-              disabled={loading}
-            >
-              {loading ? '読み解き中...' : '今日の運勢を見る'}
-            </button>
           </div>
         )}
       </div>
