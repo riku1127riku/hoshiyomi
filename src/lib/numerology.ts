@@ -24,5 +24,7 @@ export function calcTodayNumber(date: Date): number {
 
 export function calcFortuneScore(lifeNumber: number, todayNumber: number): number {
   const raw = (lifeNumber + todayNumber * 2) % 10 + 1
-  return raw
+  // 平均7.1・10%だけ低め（信憑性）・90%はポジティブ
+  const BIAS = [3, 6, 6, 7, 7, 7, 8, 8, 9, 10]
+  return BIAS[raw - 1]
 }

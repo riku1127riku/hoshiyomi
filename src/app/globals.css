@@ -222,3 +222,286 @@ body {
 .score-display {
   animation: countUp 0.8s ease-out forwards, pulseGlow 2s ease-in-out infinite 0.8s;
 }
+
+/* ===== LP ヒーロー（君の名は風） ===== */
+@keyframes auroraShift {
+  0%, 100% { opacity: 0.8; transform: scaleY(1) translateY(0); }
+  50% { opacity: 1; transform: scaleY(1.06) translateY(-14px); }
+}
+
+@keyframes milkyDrift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+@keyframes horizonPulse {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(7px); opacity: 0.9; }
+}
+
+@keyframes cometFly {
+  0%   { transform: rotate(30deg) translateX(-60px); opacity: 0; }
+  10%  { opacity: 0.8; }
+  80%  { opacity: 0.3; }
+  100% { transform: rotate(30deg) translateX(480px); opacity: 0; }
+}
+
+/* 君の名は — オーロラ帯 */
+.lp-aurora-1 {
+  position: absolute;
+  top: -8%;
+  left: -25%;
+  width: 150%;
+  height: 75%;
+  background: radial-gradient(ellipse at 38% 42%,
+    rgba(110, 55, 230, 0.3) 0%,
+    rgba(75, 25, 165, 0.13) 38%,
+    transparent 65%
+  );
+  filter: blur(55px);
+  animation: auroraShift 15s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.lp-aurora-2 {
+  position: absolute;
+  top: 8%;
+  right: -25%;
+  width: 130%;
+  height: 65%;
+  background: radial-gradient(ellipse at 65% 35%,
+    rgba(185, 65, 185, 0.2) 0%,
+    rgba(115, 30, 145, 0.09) 42%,
+    transparent 70%
+  );
+  filter: blur(65px);
+  animation: auroraShift 20s ease-in-out infinite reverse;
+  animation-delay: -8s;
+  pointer-events: none;
+}
+
+/* 天の川 — 斜めの淡い帯 */
+.lp-milky-way {
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 160%;
+  height: 100%;
+  background: linear-gradient(
+    -37deg,
+    transparent 20%,
+    rgba(185, 165, 255, 0.025) 36%,
+    rgba(210, 190, 255, 0.065) 50%,
+    rgba(185, 165, 255, 0.025) 64%,
+    transparent 80%
+  );
+  animation: milkyDrift 32s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* 地平線グロー — 暁のオレンジ */
+.lp-horizon {
+  position: absolute;
+  bottom: -5%;
+  left: -10%;
+  width: 120%;
+  height: 55%;
+  background: radial-gradient(ellipse at 50% 100%,
+    rgba(185, 72, 28, 0.24) 0%,
+    rgba(148, 50, 75, 0.11) 32%,
+    rgba(68, 14, 95, 0.04) 58%,
+    transparent 80%
+  );
+  filter: blur(35px);
+  animation: horizonPulse 11s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* コメット（ヒーロー内） */
+.lp-comet {
+  position: absolute;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(255,230,180,0.5) 35%, rgba(255,255,255,0.9));
+  border-radius: 0;
+  transform-origin: left center;
+  pointer-events: none;
+  animation: cometFly ease-out infinite;
+}
+
+/* タイトル */
+.lp-title {
+  font-size: clamp(3.8rem, 20vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(138deg, #ffffff 0%, #e8d5ff 20%, #f0be55 46%, #b088ee 72%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 28px rgba(155, 127, 205, 0.65)) drop-shadow(0 0 65px rgba(95, 45, 205, 0.3));
+  margin-bottom: 0.2rem;
+}
+
+.lp-title-sub {
+  font-size: 0.62rem;
+  letter-spacing: 0.38em;
+  color: rgba(201, 168, 76, 0.55);
+}
+
+.lp-tagline {
+  font-size: clamp(1.08rem, 5vw, 1.28rem);
+  font-weight: 700;
+  line-height: 1.75;
+  color: rgba(242, 232, 255, 0.96);
+  text-shadow: 0 0 32px rgba(155, 127, 205, 0.75), 0 0 75px rgba(95, 45, 205, 0.35);
+  margin: 1.3rem 0 0.75rem;
+}
+
+.lp-desc {
+  font-size: 0.77rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 2rem;
+  letter-spacing: 0.04em;
+}
+
+.lp-sparkle-row {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 1.35rem;
+  color: rgba(201, 168, 76, 0.72);
+}
+
+.lp-scroll-hint {
+  color: rgba(201, 168, 76, 0.38);
+  font-size: 1.1rem;
+  animation: scrollBounce 2.2s ease-in-out infinite;
+}
+
+/* プレビューカード */
+.lp-preview-card {
+  background: rgba(10, 6, 32, 0.78);
+  border-color: rgba(155, 127, 205, 0.28);
+}
+
+.lp-score-num {
+  font-size: 4.8rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #f2c258, #e87830);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 22px rgba(201, 140, 50, 0.55));
+}
+
+.lp-score-denom {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.18);
+}
+
+.lp-message-preview {
+  background: rgba(255,255,255,0.035);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.055);
+  text-align: left;
+}
+
+.lp-dots { display: flex; justify-content: center; gap: 0.4rem; }
+.lp-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+.lp-dot-active { background: var(--accent-gold); }
+
+/* セクション見出し */
+.lp-section-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--accent-gold);
+  letter-spacing: 0.1em;
+}
+
+/* バッジ */
+.lp-badge {
+  font-size: 0.58rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+.lp-badge-free {
+  background: rgba(100, 180, 100, 0.18);
+  border: 1px solid rgba(100, 180, 100, 0.35);
+  color: rgba(130, 210, 130, 0.9);
+}
+.lp-badge-sub {
+  background: rgba(155, 127, 205, 0.18);
+  border: 1px solid rgba(155, 127, 205, 0.35);
+  color: rgba(185, 155, 230, 0.9);
+}
+
+/* ステップカード */
+.lp-step-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(20, 14, 55, 0.55);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(201, 168, 76, 0.13);
+  border-radius: 0.85rem;
+  padding: 1rem 1.1rem;
+}
+
+.lp-step-num {
+  font-size: 1.3rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.45), rgba(155, 127, 205, 0.45));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex-shrink: 0;
+  width: 2rem;
+  text-align: center;
+}
+
+/* CTAカード */
+.lp-cta-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(8, 5, 28, 0.82);
+  backdrop-filter: blur(22px);
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 1.35rem;
+  padding: 2rem 1.5rem 2.25rem;
+}
+
+.lp-cta-aurora {
+  position: absolute;
+  top: -80%;
+  left: -30%;
+  width: 160%;
+  height: 200%;
+  background: radial-gradient(ellipse at 50% 20%,
+    rgba(110, 55, 230, 0.18) 0%,
+    rgba(185, 65, 185, 0.09) 35%,
+    transparent 65%
+  );
+  animation: auroraShift 13s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* 区切り線 */
+.lp-divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+  margin: 0 auto;
+}
