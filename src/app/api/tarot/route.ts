@@ -65,7 +65,7 @@ ${question ? `\n質問：${question}` : ''}
     question: question || null,
     overall: cards.map((c: typeof cards[0]) => c.name).join('・'),
     advice: null,
-  }).then(() => {}).catch(() => {})
+  }).then(() => {}, () => {})
 
   try {
     const result = await model.generateContentStream(prompt)
